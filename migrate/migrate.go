@@ -1,4 +1,4 @@
-package migrate
+package main
 
 import (
 	"diplom_back/initializers"
@@ -17,7 +17,7 @@ func init() {
 }
 
 func main() {
-	err := initializers.DB.AutoMigrate(models.Album{})
+	err := initializers.DB.AutoMigrate(models.Singer{}, models.Album{}, models.User{}, models.Order{})
 	if err != nil {
 		log.Fatal("Could not complete migrations")
 	}

@@ -1,8 +1,10 @@
 package models
 
-import "github.com/gofrs/uuid"
+import "gorm.io/gorm"
 
 type Album struct {
-	ID       int       `gorm:"primary_key" json:"id"`
-	UserUUID uuid.UUID `gorm:"type:uuid;primary_key" json:"user_uuid"`
+	gorm.Model
+	SingerID int    `json:"singer_id"`
+	Price    int    `json:"price" gorm:"type:int"`
+	ImageURL string `json:"image_url" gorm:"type:string"`
 }
