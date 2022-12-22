@@ -13,6 +13,9 @@ var (
 	server              *gin.Engine
 	AuthController      controllers.AuthController
 	AuthRouteController routes.AuthRouteController
+
+	AlbumController      controllers.AlbumController
+	AlbumRouteController routes.AlbumRouteController
 	/*
 		UserController      controllers.UserController
 		UserRouteController routes.UserRouteController
@@ -32,6 +35,8 @@ func init() {
 
 	AuthController = controllers.NewAuthController(initializers.DB)
 	AuthRouteController = routes.NewAuthRouteController(AuthController)
+	AlbumController = controllers.NewAlbumController(initializers.DB)
+	AlbumRouteController = routes.NewAlbumRouteController(AlbumController)
 
 	server = gin.Default()
 }
@@ -43,7 +48,7 @@ func main() {
 	}
 
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"http://localhost:8000", config.ClientOrigin}
+	corsConfig.AllowOrigins = []string{"http://localhost:8080", config.ClientOrigin}
 	corsConfig.AllowCredentials = true
 
 	server.Use(cors.New(corsConfig))
@@ -51,6 +56,7 @@ func main() {
 	router := server.Group("/api")
 
 	AuthRouteController.AuthRoute(router)
+	AlbumRouteController.AlbumRoute(router)
 	log.Fatal(server.Run(":" + config.ServerPort))
 
 }

@@ -10,3 +10,8 @@ type User struct {
 	Username string `gorm:"type:string" json:"username"`
 	Password string `gorm:"type:string" json:"password"`
 }
+
+type SignInUser struct {
+	Login    string `json:"login" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
