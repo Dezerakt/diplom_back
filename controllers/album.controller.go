@@ -18,14 +18,14 @@ func (obj *AlbumController) GetAll(context *gin.Context) {
 	var albums []models.Album
 	obj.DB.Find(&albums)
 
-	context.JSON(200, gin.H{
-		"content": &albums,
-	})
+	context.JSON(200, &albums)
 }
 
 func (obj *AlbumController) GetById(context *gin.Context) {
-	var album models.Album
-
-	obj.DB.First(&album, context.Param("id"))
+	var album []models.Album
+	/*
+		obj.DB.Joins("singers",
+			obj.DB.Where(gorm.)).Find(&album)*/
+	obj.DB.Preload("Albums")
 	context.JSON(200, &album)
 }

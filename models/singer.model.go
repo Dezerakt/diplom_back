@@ -6,5 +6,5 @@ type Singer struct {
 	gorm.Model
 	Name string `gorm:"type:string" json:"name"`
 
-	Albums []Album
+	Albums []Album `gorm:"constraint:OnDelete:CASCADE;"`
 }
