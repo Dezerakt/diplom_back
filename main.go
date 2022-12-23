@@ -16,12 +16,9 @@ var (
 
 	AlbumController      controllers.AlbumController
 	AlbumRouteController routes.AlbumRouteController
-	/*
-		UserController      controllers.UserController
-		UserRouteController routes.UserRouteController
 
-		PostController      controllers.PostController
-		PostRouteController routes.PostRouteController*/
+	SingerController      controllers.SingerController
+	SingerRouteController routes.SingerRouteController
 )
 
 func init() {
@@ -35,8 +32,12 @@ func init() {
 
 	AuthController = controllers.NewAuthController(initializers.DB)
 	AuthRouteController = routes.NewAuthRouteController(AuthController)
+
 	AlbumController = controllers.NewAlbumController(initializers.DB)
 	AlbumRouteController = routes.NewAlbumRouteController(AlbumController)
+
+	SingerController = controllers.NewSingerController(initializers.DB)
+	SingerRouteController = routes.NewSingerRouteController(SingerController)
 
 	server = gin.Default()
 }
@@ -57,6 +58,7 @@ func main() {
 
 	AuthRouteController.AuthRoute(router)
 	AlbumRouteController.AlbumRoute(router)
+	SingerRouteController.SingerRoute(router)
 	log.Fatal(server.Run(":" + config.ServerPort))
 
 }

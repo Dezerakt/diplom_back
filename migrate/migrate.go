@@ -17,9 +17,13 @@ func init() {
 }
 
 func main() {
-	err := initializers.DB.AutoMigrate(models.Singer{}, models.Album{}, models.User{}, models.Order{})
+	err := initializers.DB.Migrator().DropTable(models.Singer{}, models.Album{}, models.User{}, models.Order{})
 	if err != nil {
-		log.Fatal("Could not complete migrations")
+		log.Fatal("Error while removing data from database", err)
+	}
+	err = initializers.DB.AutoMigrate(models.Singer{}, models.Album{}, models.User{}, models.Order{})
+	if err != nil {
+		log.Fatal("Could not complete migrations", err)
 	}
 	fmt.Println("Migrations complete")
 }
