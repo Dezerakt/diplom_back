@@ -56,11 +56,21 @@ func (obj *AlbumController) AddAlbum(context *gin.Context) {
 func (obj *AlbumController) UpdateAlbum(context *gin.Context) {
 	var updateAlbum models.AlbumInput
 
-	if err := context.ShouldBindJSON(updateAlbum); err != nil {
+	if err := context.ShouldBindJSON(&updateAlbum); err != nil {
 		log.Fatal(err)
 	}
 
-	obj.DB.Model(&models.Album{}).Updates(map[string]interface{}{})
+	if err := obj.DB.Model(&models.Album{}).Where("id = ?", context.Param("id")).Updates(&models.Album{
+		SingerID: updateAlbum.SingerID,
+		Name:     updateAlbum.Name,
+		Count:    updateAlbum.Count,
+		Price:    updateAlbum.Price,
+		ImageURL: updateAlbum.ImageURL,
+	}).Error; err != nil {
+		log.Fatal("Update failed")
+	}
+
+	context.JSON(200, "Successfully")
 }
 
 func (obj *AlbumController) DeleteAlbum(context *gin.Context) {
