@@ -19,4 +19,7 @@ func (rc *SingerRouteController) SingerRoute(rg *gin.RouterGroup) {
 	router := rg.Group("singer")
 
 	router.GET("/:id", rc.singerController.GetById)
+	router.POST("/add", rc.singerController.AddSinger)
+	router.PUT("/:id", rc.singerController.UpdateAlbum)
+	router.DELETE("/:id", rc.singerController.DeleteAlbum)
 }

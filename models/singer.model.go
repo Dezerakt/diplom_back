@@ -8,7 +8,13 @@ import (
 type Singer struct {
 	gorm.Model
 	Name      string    `gorm:"type:string;unique;not null" json:"name"`
-	BirthDate time.Time `gorm:"notnull"`
+	BirthDate time.Time `json:"birth_date"`
 
-	Albums []Album `gorm:"constraint:OnDelete:CASCADE;ForeignKey:SingerID;"`
+	Albums []Album `json:"albums"`
+}
+type SingerInput struct {
+	Name      string    `json:"name"`
+	BirthDate time.Time `json:"birth_date"`
+
+	Albums []Album `json:"albums,omitempty"`
 }
