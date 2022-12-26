@@ -18,4 +18,6 @@ func (rc *AlbumRouteController) AlbumRoute(rg *gin.RouterGroup) {
 
 	router.GET("/get-all", rc.albumController.GetAll)
 	router.GET("/:id", rc.albumController.GetById)
+	router.POST("/add", rc.albumController.AddAlbum)
+	router.DELETE("/:id", rc.albumController.DeleteAlbum)
 }
