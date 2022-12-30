@@ -12,11 +12,12 @@ SpotifyWidget
 
 type Album struct {
 	gorm.Model
-	SingerID uint
-	Name     string `json:"name"`
-	Count    int    `json:"count"`
-	Price    int    `json:"price" gorm:"type:int"`
-	ImageURL string `json:"image_url" gorm:"type:string"`
+	SingerID   uint   `json:"singer_id"`
+	SingerName string `gorm:"references:Name" json:"singer_name"`
+	Name       string `json:"name"`
+	Count      int    `json:"count"`
+	Price      int    `json:"price" gorm:"type:int"`
+	ImageURL   string `json:"image_url" gorm:"type:string"`
 }
 
 type AlbumInput struct {
