@@ -6,12 +6,18 @@ import (
 
 type User struct {
 	gorm.Model
-	Login    string `gorm:"type:string" json:"login"`
+	Email    string `gorm:"type:string" json:"login"`
 	Username string `gorm:"type:string" json:"username"`
 	Password string `gorm:"type:string" json:"password"`
 }
 
 type SignInUser struct {
-	Login    string `json:"login" binding:"required"`
+	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
+}
+
+type SignUpUser struct {
+	Email    string `gorm:"type:string" json:"email" binding:"required"`
+	Username string `gorm:"type:string" json:"username" binding:"required"`
+	Password string `gorm:"type:string" json:"password" binding:"required"`
 }

@@ -14,7 +14,8 @@ func NewAuthRouteController(authController controllers.AuthController) AuthRoute
 }
 
 func (rc *AuthRouteController) AuthRoute(rg *gin.RouterGroup) {
-	router := rg.Group("auth")
+	router := rg.Group("/auth")
 
-	router.POST("/register", rc.authController.SignInUser)
+	router.POST("/sign-in", rc.authController.SignInUser)
+	router.POST("/sign-up", rc.authController.SignUpUser)
 }
