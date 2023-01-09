@@ -17,7 +17,7 @@ func NewAlbumController(DB *gorm.DB) AlbumController {
 
 func (obj *AlbumController) GetAll(context *gin.Context) {
 	var albums []models.Album
-	obj.DB.Find(&albums)
+	obj.DB.Preload("Images").Preload("Songs").Find(&albums)
 
 	context.JSON(200, &albums)
 }
@@ -30,7 +30,7 @@ func (obj *AlbumController) GetById(context *gin.Context) {
 }
 
 func (obj *AlbumController) AddAlbum(context *gin.Context) {
-	var album models.AlbumInput
+	var album models.Album
 
 	if err := context.ShouldBindJSON(&album); err != nil {
 		context.IndentedJSON(400, err)
@@ -54,7 +54,7 @@ func (obj *AlbumController) AddAlbum(context *gin.Context) {
 }
 
 func (obj *AlbumController) UpdateAlbum(context *gin.Context) {
-	var updateAlbum models.AlbumInput
+	var updateAlbum models.Album
 
 	if err := context.ShouldBindJSON(&updateAlbum); err != nil {
 		log.Fatal(err)

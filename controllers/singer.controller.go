@@ -48,7 +48,7 @@ func (obj *SingerController) AddSinger(context *gin.Context) {
 }
 
 func (obj *SingerController) UpdateAlbum(context *gin.Context) {
-	var updateAlbum models.AlbumInput
+	var updateAlbum models.Album
 
 	if err := context.ShouldBindJSON(&updateAlbum); err != nil {
 		log.Fatal(err)
