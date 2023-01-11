@@ -193,7 +193,7 @@ func (obj AlbumSeeder) Seed(DB *gorm.DB) {
 				{
 					Model:         gorm.Model{},
 					Name:          "Ain't Nice",
-					SpotifyWidget: "",
+					SpotifyWidget: "<iframe style=\"border-radius:12px\" src=\"https://open.spotify.com/embed/track/3hxUQ6HX7p4dY8qQVInVoY?utm_source=generator\" width=\"100%\" height=\"152\" frameBorder=\"0\" allowfullscreen=\"\" allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\" loading=\"lazy\"></iframe>",
 				},
 				{
 					Model:         gorm.Model{},
@@ -259,12 +259,12 @@ func (obj AlbumSeeder) Seed(DB *gorm.DB) {
 				},
 				{
 					Model:   gorm.Model{},
-					AlbumID: 1,
+					AlbumID: 3,
 					URL:     "https://i.discogs.com/JZmwt6pfZyORIJ7Bharw38bJt_RQLewpJj5wHGrcWk0/rs:fit/g:sm/q:90/h:553/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2ODE4/MjQ2LTE2MTA1NDIw/MTctMzUzMi5qcGVn.jpeg",
 				},
 				{
 					Model:   gorm.Model{},
-					AlbumID: 1,
+					AlbumID: 3,
 					URL:     "https://i.discogs.com/Rc-_Mi2Mbw3WVgDqAI7KqDVhebv8k9-evfaYn_wLWas/rs:fit/g:sm/q:90/h:450/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2ODE4/MjQ2LTE2MTM1OTMw/MjAtODY5OC5qcGVn.jpeg",
 				},
 			},

@@ -24,9 +24,23 @@ func (obj *AlbumController) GetAll(context *gin.Context) {
 
 func (obj *AlbumController) GetById(context *gin.Context) {
 	var album models.Album
+	var singer models.Singer
 
-	obj.DB.First(&album, context.Param("id"))
-	context.JSON(200, &album)
+	if err := obj.DB.
+		Preload("Songs").
+		Preload("Images").
+		First(&album, context.Param("id")).
+		Error; err != nil {
+		log.Fatal(err.Error())
+	}
+	if err := obj.DB.First(&singer, album.SingerID).Error; err != nil {
+		log.Fatal(err.Error())
+	}
+
+	context.JSON(200, gin.H{
+		"album":  &album,
+		"singer": &singer,
+	})
 }
 
 func (obj *AlbumController) AddAlbum(context *gin.Context) {

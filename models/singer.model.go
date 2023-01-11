@@ -7,14 +7,10 @@ import (
 
 type Singer struct {
 	gorm.Model
-	Name      string    `gorm:"type:string;unique;not null" json:"name"`
-	BirthDate time.Time `json:"birth_date"`
+	Name        string    `gorm:"type:string;unique;not null" json:"name"`
+	BirthDate   time.Time `json:"birth_date"`
+	ImageURL    string    `json:"image_url"`
+	Description string    `json:"description"`
 
 	Albums []Album `json:"albums"`
-}
-type SingerInput struct {
-	Name      string    `json:"name"`
-	BirthDate time.Time `json:"birth_date"`
-
-	Albums []Album `json:"albums,omitempty"`
 }
