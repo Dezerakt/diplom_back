@@ -1,22 +1,20 @@
 package controllers
 
 import (
-	"diplom_back/initializers"
 	"diplom_back/models"
-	"diplom_back/utils"
+	"diplom_back/services"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
-	"net/http"
-	"strings"
 )
 
 type AuthController struct {
-	DB *gorm.DB
+	DB           *gorm.DB
+	tokenService services.Jwt
 }
 
 func NewAuthController(DB *gorm.DB) AuthController {
-	return AuthController{DB}
+	return AuthController{DB: DB, tokenService: services.NewJWT()}
 }
 
 func (c *AuthController) SignUpUser(context *gin.Context) {
@@ -43,7 +41,9 @@ func (c *AuthController) SignUpUser(context *gin.Context) {
 }
 
 func (c *AuthController) SignInUser(ctx *gin.Context) {
-	var payload *models.SignInUser
+	token := c.tokenService.GetNewAccessToken()
+	ctx.JSON(200, token)
+	/*var payload *models.SignInUser
 
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
@@ -63,8 +63,8 @@ func (c *AuthController) SignInUser(ctx *gin.Context) {
 	}
 
 	config, _ := initializers.LoadConfig(".")
-
-	accessToken, err := utils.CreateToken(config.AccessTokenExpiresIn, user.ID, config.AccessTokenPrivateKey)
+	*/
+	/*accessToken, err := utils.CreateToken(config.AccessTokenExpiresIn, user.ID, config.AccessTokenPrivateKey)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
 		return
@@ -79,6 +79,6 @@ func (c *AuthController) SignInUser(ctx *gin.Context) {
 	ctx.SetCookie("access_token", accessToken, config.AccessTokenMaxAge*60, "/", "localhost", false, true)
 	ctx.SetCookie("refresh_token", refreshToken, config.RefreshTokenMaxAge*60, "/", "localhost", false, true)
 	ctx.SetCookie("logged_in", "true", config.AccessTokenMaxAge*60, "/", "localhost", false, false)
-
-	ctx.JSON(http.StatusOK, gin.H{"status": "success", "access_token": accessToken})
+	*/
+	//ctx.JSON(http.StatusOK, gin.H{"status": "success", "access_token": accessToken})
 }

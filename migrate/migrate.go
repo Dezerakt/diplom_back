@@ -22,6 +22,7 @@ func main() {
 		models.Image{},
 		models.Singer{},
 		models.Album{},
+		models.Token{},
 		models.User{},
 		models.Order{})
 	if err != nil {
@@ -32,6 +33,7 @@ func main() {
 		models.Image{},
 		models.Singer{},
 		models.Album{},
+		models.Token{},
 		models.User{},
 		models.Order{})
 	if err != nil {
