@@ -19,6 +19,9 @@ var (
 
 	SingerController      controllers.SingerController
 	SingerRouteController routes.SingerRouteController
+
+	CartController      controllers.CartController
+	CartRouteController routes.CartRouteController
 )
 
 func init() {
@@ -38,6 +41,9 @@ func init() {
 
 	SingerController = controllers.NewSingerController(initializers.DB)
 	SingerRouteController = routes.NewSingerRouteController(SingerController)
+
+	CartController = controllers.NewCartController(initializers.DB)
+	CartRouteController = routes.NewCartRouteController(CartController)
 
 	server = gin.Default()
 }
@@ -59,6 +65,7 @@ func main() {
 	AuthRouteController.AuthRoute(router)
 	AlbumRouteController.AlbumRoute(router)
 	SingerRouteController.SingerRoute(router)
+	CartRouteController.CartRoute(router)
 	log.Fatal(server.Run(":" + config.ServerPort))
 
 }

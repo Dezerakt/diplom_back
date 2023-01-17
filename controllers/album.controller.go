@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
+	"net/http"
 )
 
 type AlbumController struct {
@@ -20,6 +21,34 @@ func (obj *AlbumController) GetAll(context *gin.Context) {
 	obj.DB.Preload("Images").Preload("Songs").Find(&albums)
 
 	context.JSON(200, &albums)
+}
+
+func (obj *AlbumController) GetAlbumsByIds(ctx *gin.Context) {
+	type albumsInput struct {
+		AlbumIds []string `json:"album_ids"`
+	}
+
+	var albums albumsInput
+	var resultAlbums []models.Album
+
+	if err := ctx.ShouldBindJSON(&albums); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
+		return
+	}
+
+	for _, value := range albums.AlbumIds {
+		if value != "" {
+			var album models.Album
+			err := obj.DB.Find(&album, value).Error
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			resultAlbums = append(resultAlbums, album)
+		}
+	}
+
+	ctx.JSON(200, resultAlbums)
 }
 
 func (obj *AlbumController) GetById(context *gin.Context) {

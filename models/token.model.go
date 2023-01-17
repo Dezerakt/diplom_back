@@ -1,10 +1,11 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type Token struct {
 	gorm.Model
-	UserID       uint   `json:"user_id"`
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
+	UserID uint   `json:"user_id" gorm:"unique"`
+	Token  string `json:"token" gorm:"type:string;"`
 }

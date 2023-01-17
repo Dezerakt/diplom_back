@@ -14,4 +14,6 @@ type Album struct {
 	Genre       string  `json:"genre" gorm:"type:string"`
 	Songs       []Song  `json:"songs"`
 	Images      []Image `json:"images"`
+
+	Cart Cart
 }

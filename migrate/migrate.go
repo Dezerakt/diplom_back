@@ -24,7 +24,8 @@ func main() {
 		models.Album{},
 		models.Token{},
 		models.User{},
-		models.Order{})
+		models.Order{},
+		models.Cart{})
 	if err != nil {
 		log.Fatal("Error while removing data from database", err)
 	}
@@ -35,7 +36,8 @@ func main() {
 		models.Album{},
 		models.Token{},
 		models.User{},
-		models.Order{})
+		models.Order{},
+		models.Cart{})
 	if err != nil {
 		log.Fatal("Could not complete migrations", err)
 	}

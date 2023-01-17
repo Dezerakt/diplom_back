@@ -10,6 +10,8 @@ type User struct {
 	Username string `gorm:"type:string" json:"username"`
 	Password string `gorm:"type:string" json:"password"`
 	Token    Token
+
+	Cart Cart
 }
 
 type SignInUser struct {
