@@ -102,6 +102,76 @@ func (c *AuthController) SignInUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"token": token})
 }
 
+func (c *AuthController) GetInfoByToken(ctx *gin.Context) {
+	var (
+		candidateToken models.Token
+		candidateUser  models.User
+	)
+
+	arrivedToken := ctx.Request.Header["Token"][0]
+	if err := c.DB.Where("token = ?", &arrivedToken).Find(&candidateToken).Error; err != nil {
+		log.Fatal(err.Error())
+	}
+
+	if arrivedToken != candidateToken.Token {
+		ctx.JSON(400, gin.H{
+			"status": "invalid token",
+		})
+	} else {
+		if err := c.DB.
+			Where("id = ?", &candidateToken.ID).
+			Find(&candidateUser).Error; err != nil {
+
+			log.Fatal(err.Error())
+		}
+
+		ctx.JSON(200, gin.H{
+			"user": candidateUser,
+		})
+	}
+
+}
+
+func (c *AuthController) ChangeData(ctx *gin.Context) {
+	var candidateToken models.Token
+	var dbUser models.User
+
+	arrivedToken := ctx.Request.Header["Token"][0]
+	var arrivedUser models.User
+
+	if err := ctx.ShouldBindJSON(&arrivedUser); err != nil {
+		log.Fatal()
+	}
+
+	if err := c.DB.Where("token = ?", &arrivedToken).Find(&candidateToken).Error; err != nil {
+		log.Fatal(err.Error())
+	}
+
+	if err := c.DB.
+		Where("id = ?", &candidateToken.ID).
+		Find(&dbUser).Error; err != nil {
+
+		log.Fatal(err.Error())
+	}
+
+	if arrivedToken == candidateToken.Token {
+		if err := c.DB.
+			Model(&models.User{}).
+			Where("id = ?", &dbUser.ID).
+			Updates(&arrivedUser).Error; err != nil {
+			log.Fatal(err.Error())
+		}
+
+		ctx.JSON(200, gin.H{
+			"status": "success",
+		})
+	} else {
+		ctx.JSON(400, gin.H{
+			"status": "token invalid",
+		})
+	}
+}
+
 func (c *AuthController) Logout(ctx *gin.Context) {
 	type UserToken struct {
 		Token string `json:"token"`

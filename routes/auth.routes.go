@@ -19,4 +19,6 @@ func (rc *AuthRouteController) AuthRoute(rg *gin.RouterGroup) {
 	router.POST("/sign-in", rc.authController.SignInUser)
 	router.POST("/sign-up", rc.authController.SignUpUser)
 	router.POST("/logout", rc.authController.Logout)
+	router.POST("/change", rc.authController.ChangeData)
+	router.POST("/get-info", rc.authController.GetInfoByToken)
 }
