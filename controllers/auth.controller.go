@@ -147,7 +147,7 @@ func (c *AuthController) ChangeData(ctx *gin.Context) {
 	}
 
 	if err := c.DB.
-		Where("email = ?", &arrivedUser.Email).
+		Where("id = ?", &arrivedUser.ID).
 		First(&dbUser).Error; err != nil {
 
 		utils.ErrorResponse(ctx, err)
