@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"diplom_back/models"
+	"diplom_back/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"log"
 	"net/http"
 )
 
@@ -33,7 +33,7 @@ func (obj *AlbumController) GetAlbumsByIds(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&albums); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
-		return
+		ctx.Abort()
 	}
 
 	for _, value := range albums.AlbumIds {
@@ -41,7 +41,7 @@ func (obj *AlbumController) GetAlbumsByIds(ctx *gin.Context) {
 			var album models.Album
 			err := obj.DB.Find(&album, value).Error
 			if err != nil {
-				log.Fatal(err)
+				utils.ErrorResponse(ctx, err)
 			}
 
 			resultAlbums = append(resultAlbums, album)
@@ -60,10 +60,10 @@ func (obj *AlbumController) GetById(context *gin.Context) {
 		Preload("Images").
 		First(&album, context.Param("id")).
 		Error; err != nil {
-		log.Fatal(err.Error())
+		utils.ErrorResponse(context, err)
 	}
 	if err := obj.DB.First(&singer, album.SingerID).Error; err != nil {
-		log.Fatal(err.Error())
+		utils.ErrorResponse(context, err)
 	}
 
 	context.JSON(200, gin.H{
@@ -76,8 +76,7 @@ func (obj *AlbumController) AddAlbum(context *gin.Context) {
 	var album models.Album
 
 	if err := context.ShouldBindJSON(&album); err != nil {
-		context.IndentedJSON(400, err)
-		log.Fatal(err)
+		utils.ErrorResponse(context, err)
 	}
 
 	err := obj.DB.Create(&models.Album{
@@ -89,8 +88,7 @@ func (obj *AlbumController) AddAlbum(context *gin.Context) {
 	}).Error
 
 	if err != nil {
-		context.IndentedJSON(400, err)
-		log.Fatal(err)
+		utils.ErrorResponse(context, err)
 	}
 
 	context.IndentedJSON(200, album)
@@ -100,7 +98,7 @@ func (obj *AlbumController) UpdateAlbum(context *gin.Context) {
 	var updateAlbum models.Album
 
 	if err := context.ShouldBindJSON(&updateAlbum); err != nil {
-		log.Fatal(err)
+		utils.ErrorResponse(context, err)
 	}
 
 	if err := obj.DB.Model(&models.Album{}).Where("id = ?", context.Param("id")).Updates(&models.Album{
@@ -110,7 +108,7 @@ func (obj *AlbumController) UpdateAlbum(context *gin.Context) {
 		Price:    updateAlbum.Price,
 		ImageURL: updateAlbum.ImageURL,
 	}).Error; err != nil {
-		log.Fatal("Update failed")
+		utils.ErrorResponse(context, err)
 	}
 
 	context.JSON(200, "Successfully")
@@ -120,7 +118,7 @@ func (obj *AlbumController) DeleteAlbum(context *gin.Context) {
 	err := obj.DB.Unscoped().Delete(&models.Album{}, context.Param("id")).Error
 
 	if err != nil {
-		log.Fatal(err)
+		utils.ErrorResponse(context, err)
 	}
 
 	context.JSON(200, gin.H{

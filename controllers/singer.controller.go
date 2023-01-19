@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"diplom_back/models"
+	"diplom_back/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"log"
 )
 
 type SingerController struct {
@@ -19,7 +19,7 @@ func (obj *SingerController) GetById(context *gin.Context) {
 	var singers models.Singer
 	err := obj.DB.Preload("Albums").First(&singers, context.Param("id")).Error
 	if err != nil {
-		log.Fatal(err)
+		utils.ErrorResponse(context, err)
 	}
 	context.JSON(200, &singers)
 }
@@ -28,8 +28,7 @@ func (obj *SingerController) AddSinger(context *gin.Context) {
 	var singer models.Singer
 
 	if err := context.ShouldBindJSON(&singer); err != nil {
-		context.IndentedJSON(400, err)
-		log.Fatal(err)
+		utils.ErrorResponse(context, err)
 	}
 
 	err := obj.DB.Create(&models.Singer{
@@ -40,8 +39,7 @@ func (obj *SingerController) AddSinger(context *gin.Context) {
 	}).Error
 
 	if err != nil {
-		context.IndentedJSON(400, err)
-		log.Fatal(err)
+		utils.ErrorResponse(context, err)
 	}
 
 	context.IndentedJSON(200, &singer)
@@ -51,7 +49,7 @@ func (obj *SingerController) UpdateAlbum(context *gin.Context) {
 	var updateAlbum models.Album
 
 	if err := context.ShouldBindJSON(&updateAlbum); err != nil {
-		log.Fatal(err)
+		utils.ErrorResponse(context, err)
 	}
 
 	if err := obj.DB.Model(&models.Album{}).Where("id = ?", context.Param("id")).Updates(&models.Album{
@@ -61,7 +59,7 @@ func (obj *SingerController) UpdateAlbum(context *gin.Context) {
 		Price:    updateAlbum.Price,
 		ImageURL: updateAlbum.ImageURL,
 	}).Error; err != nil {
-		log.Fatal("Update failed")
+		utils.ErrorResponse(context, err)
 	}
 
 	context.JSON(200, "Successfully")
@@ -71,7 +69,7 @@ func (obj *SingerController) DeleteAlbum(context *gin.Context) {
 	err := obj.DB.Unscoped().Delete(&models.Album{}, context.Param("id")).Error
 
 	if err != nil {
-		log.Fatal(err)
+		utils.ErrorResponse(context, err)
 	}
 
 	context.JSON(200, gin.H{

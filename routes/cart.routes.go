@@ -16,6 +16,8 @@ func NewCartRouteController(cartController controllers.CartController) CartRoute
 }
 
 func (c CartRouteController) CartRoute(rg *gin.RouterGroup) {
-	//router := rg.Group("cart")
+	router := rg.Group("cart")
 
+	router.POST("/add-few", c.cartController.AddFew)
+	router.POST("/user", c.cartController.GetAllByUser)
 }

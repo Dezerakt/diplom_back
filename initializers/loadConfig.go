@@ -2,7 +2,6 @@ package initializers
 
 import (
 	"github.com/spf13/viper"
-	"time"
 )
 
 type Config struct {
@@ -14,12 +13,6 @@ type Config struct {
 	ServerPort     string `mapstructure:"PORT"`
 
 	ClientOrigin string `mapstructure:"CLIENT_ORIGIN"`
-
-	AccessTokenExpiresIn  time.Duration `mapstructure:"ACCESS_TOKEN_EXPIRES_IN"`
-	RefreshTokenExpiresIn time.Duration `mapstructure:"REFRESH_TOKEN_EXPIRES_IN"`
-
-	JwtSecretKey string `mapstructure:"JWT_SECRET_KEY"`
-	TokenTTL     int64  `mapstructure:"TOKEN_TTL"`
 }
 
 func LoadConfig(path string) (config Config, err error) {
