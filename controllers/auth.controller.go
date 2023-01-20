@@ -67,19 +67,19 @@ func (c *AuthController) SignInUser(ctx *gin.Context) {
 	var payload *models.SignInUser
 
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
+		utils.ErrorResponse(ctx, err)
 		return
 	}
 
 	var user *models.User
-	result := c.DB.First(&user, "email = ?", strings.ToLower(payload.Email))
-	if result.Error != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Invalid email or Password"})
+	err := c.DB.First(&user, "email = ?", strings.ToLower(payload.Email)).Error
+	if err != nil {
+		utils.ErrorResponse(ctx, err)
 		return
 	}
 
 	if result := utils.VerifyPassword(user.Password, payload.Password); result != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Invalid email or Password"})
+		utils.ErrorResponse(ctx, err)
 		return
 	}
 
@@ -87,6 +87,7 @@ func (c *AuthController) SignInUser(ctx *gin.Context) {
 
 	if err != nil {
 		utils.ErrorResponse(ctx, err)
+		return
 	}
 
 	var firstToken *models.Token
@@ -96,6 +97,7 @@ func (c *AuthController) SignInUser(ctx *gin.Context) {
 	err = c.DB.Model(&models.Token{}).Where("user_id = ?", &firstToken.UserID).Update("token", token).Error
 	if err != nil {
 		utils.ErrorResponse(ctx, err)
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"token": string(token)})
@@ -114,17 +116,19 @@ func (c *AuthController) GetInfoByToken(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&arrivedToken); err != nil {
 		utils.ErrorResponse(ctx, err)
+		return
 	}
 
 	if err := c.DB.Where("token = ?", &arrivedToken.Token).First(&candidateToken).Error; err != nil {
 		utils.ErrorResponse(ctx, err)
+		return
 	}
 
 	if arrivedToken.Token != candidateToken.Token {
 		ctx.JSON(400, gin.H{
 			"status": "invalid token",
 		})
-		log.Fatal("invalid arrived token")
+		return
 	}
 
 	if err := c.DB.
@@ -132,6 +136,7 @@ func (c *AuthController) GetInfoByToken(ctx *gin.Context) {
 		Find(&candidateUser).Error; err != nil {
 		fmt.Println("token is invalid")
 		utils.ErrorResponse(ctx, err)
+		return
 	}
 
 	ctx.JSON(200, &candidateUser)
@@ -144,6 +149,7 @@ func (c *AuthController) ChangeData(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&arrivedUser); err != nil {
 		utils.ErrorResponse(ctx, err)
+		return
 	}
 
 	if err := c.DB.
@@ -151,6 +157,7 @@ func (c *AuthController) ChangeData(ctx *gin.Context) {
 		First(&dbUser).Error; err != nil {
 
 		utils.ErrorResponse(ctx, err)
+		return
 	}
 
 	if dbUser.Password != arrivedUser.Password {
@@ -162,6 +169,7 @@ func (c *AuthController) ChangeData(ctx *gin.Context) {
 		Where("id = ?", &dbUser.ID).
 		Updates(&arrivedUser).Error; err != nil {
 		utils.ErrorResponse(ctx, err)
+		return
 	}
 
 	ctx.JSON(200, gin.H{
@@ -177,12 +185,14 @@ func (c *AuthController) Logout(ctx *gin.Context) {
 	var userToken UserToken
 	if err := ctx.ShouldBindJSON(&userToken); err != nil {
 		utils.ErrorResponse(ctx, err)
+		return
 	}
 
-	err := c.DB.Where("token = ?", userToken.Token).Unscoped().Delete(&models.Token{}).Error
+	err := c.DB.Unscoped().Delete(&models.Token{}, "token = ?", &userToken.Token).Error
 
 	if err != nil {
 		utils.ErrorResponse(ctx, err)
+		return
 	}
 
 	ctx.JSON(200, gin.H{

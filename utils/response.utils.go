@@ -9,6 +9,8 @@ type ResponseUtil struct {
 }
 
 func ErrorResponse(ctx *gin.Context, err error) {
-	ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
+
+	ctx.JSON(http.StatusBadRequest, err.Error())
 	ctx.Abort()
+	return
 }
